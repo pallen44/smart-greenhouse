@@ -66,4 +66,40 @@ It starts as a small indoor greenhouse for herbs like basil and mint — but is 
 
 ---
 
+## 📈 Current Status
+| Component | Progress |
+|------------|-----------|
+| Raspberry Pi Server | 🟩 Configured |
+| ESP32 Node | 🟨 Setting up |
+| Sensors | 🟨 Ordering / Testing |
+| Greenhouse Enclosure | 🟩 Selected |
+| Control Logic | ⬜ Planned |
+| Digital Twin | ⬜ Planned |
+
+---
+
+## 💡 Future Ideas
+- Camera + image-based plant growth detection  
+- Predictive watering via AI model  
+- Home Assistant integration  
+- Sustainability dashboard (energy / water usage)  
+- Publish open-source guide once mature  
+
+---
+
+## 👤 Author
+**Parker Allen**  
+📍 Computer Science + Math student, UNL  
+🎯 Interests: IoT · Automation · Sustainability · Digital Twins  
+💬 _“Blending code, data, and design to grow something real.”_
+
+---
+
+### 🪴 License
+This project is for personal and educational use.  
+Feel free to fork, remix, or build your own version — just link back here!
+
+---
+
+
 ## 📂 Repository Structure
