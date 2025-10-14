@@ -100,6 +100,3 @@ This project is for personal and educational use.
 Feel free to fork, remix, or build your own version — just link back here!
 
 ---
-
-
-## 📂 Repository Structure
