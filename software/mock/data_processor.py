@@ -95,7 +95,7 @@ def on_connect(client: mqtt.Client, _userdata: Any, _flags: Dict[str, Any],
         _properties: MQTT v5 properties (not used for v3 clients).
     """
     if rc == 0:
-        print("✅ Connected to MQTT broker.")
+        print("Connected to MQTT broker.")
         client.subscribe(MQTT_TOPIC)
         print(f"📡 Subscribed to topic '{MQTT_TOPIC}'")
     else:
