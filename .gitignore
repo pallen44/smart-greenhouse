@@ -25,8 +25,8 @@ venv/
 software/influxdb/
 !software/influxdb/.gitkeep
 
-software/grafana/
-!software/grafana/.gitkeep
+software/grafana/plugins/
+!software/grafana/plugins/.gitkeep
 
 software/mosquitto/data/
 software/mosquitto/log/
