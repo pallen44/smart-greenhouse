@@ -1,0 +1,17 @@
+certifi==2025.10.5
+contourpy==1.3.2
+cycler==0.12.1
+fonttools==4.60.1
+influxdb-client==1.49.0
+kiwisolver==1.4.9
+matplotlib==3.10.7
+numpy==2.2.6
+packaging==25.0
+paho-mqtt==2.1.0
+pillow==11.3.0
+pyparsing==3.2.5
+python-dateutil==2.9.0.post0
+reactivex==4.0.4
+six==1.17.0
+typing_extensions==4.15.0
+urllib3==2.5.0
