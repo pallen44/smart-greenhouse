@@ -1,0 +1,65 @@
+# ─────────────────────────────
+# Python
+# ─────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.log
+*.db
+*.sqlite3
+*.csv
+*.pdf
+*.png
+
+# Virtual environments
+venv/
+.env
+.env.*
+
+# ─────────────────────────────
+# Docker & Service Data
+# ─────────────────────────────
+# Ignore persistent container data (regenerated on run)
+software/influxdb/
+!software/influxdb/.gitkeep
+
+software/grafana/
+!software/grafana/.gitkeep
+
+software/mosquitto/data/
+software/mosquitto/log/
+!software/mosquitto/config/mosquitto.conf
+
+# Ignore container logs or temp data anywhere
+*/log/
+*/logs/
+
+# ─────────────────────────────
+# Firmware & Build Artifacts
+# ─────────────────────────────
+firmware/build/
+firmware/.pio/
+*.bin
+*.elf
+*.hex
+
+# ─────────────────────────────
+# OS / IDE / Tooling Files
+# ─────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+*.bak
+*.tmp
+*.old
+
+# ─────────────────────────────
+# Misc / Experimental
+# ─────────────────────────────
+notebooks/
+scratch/
