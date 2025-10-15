@@ -23,7 +23,7 @@ services:
       - DOCKER_INFLUXDB_INIT_USERNAME=admin
       - DOCKER_INFLUXDB_INIT_PASSWORD=admin1234
       - DOCKER_INFLUXDB_INIT_ORG=greenhouse
-      - DOCKER_INFLUXDB_INIT_BUCKET=sensors
+      - DOCKER_INFLUXDB_INIT_BUCKET=sensor_data
     restart: unless-stopped
 
   grafana:
