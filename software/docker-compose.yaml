@@ -1,16 +1,17 @@
 services:
+  # --- MQTT Broker ---
   mosquitto:
     image: eclipse-mosquitto:2
     container_name: mqtt
     ports:
       - "1883:1883"
-      - "9001:9001"
     volumes:
       - ./mosquitto/config:/mosquitto/config
       - ./mosquitto/data:/mosquitto/data
       - ./mosquitto/log:/mosquitto/log
     restart: unless-stopped
 
+  # --- InfluxDB 2.x ---
   influxdb:
     image: influxdb:2
     container_name: influxdb
@@ -26,6 +27,7 @@ services:
       - DOCKER_INFLUXDB_INIT_BUCKET=sensor_data
     restart: unless-stopped
 
+  # --- Grafana ---
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -38,4 +40,31 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     depends_on:
       - influxdb
+    restart: unless-stopped
+
+  # --- Mock Sensor Data Generator ---
+  mock_sensors:
+    build: ./mock_data
+    container_name: mock_sensors
+    depends_on:
+      - mosquitto
+    environment:
+      - MQTT_BROKER=${MQTT_BROKER}
+      - MQTT_PORT=${MQTT_PORT}
+    restart: unless-stopped
+
+  # --- Data Processor (MQTT → InfluxDB) ---
+  data_processor:
+    build: ./data_processor
+    container_name: data_processor
+    depends_on:
+      - influxdb
+      - mosquitto
+    environment:
+      - MQTT_BROKER=${MQTT_BROKER}
+      - MQTT_PORT=${MQTT_PORT}
+      - INFLUXDB_URL=${INFLUXDB_URL}
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
+      - INFLUXDB_ORG=${INFLUXDB_ORG}
+      - INFLUXDB_BUCKET=${INFLUXDB_BUCKET}
     restart: unless-stopped

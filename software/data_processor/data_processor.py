@@ -1,6 +1,7 @@
 """Data processor that subscribes to MQTT topics and writes sensor data to InfluxDB."""
 import json
 import time
+import os
 from datetime import datetime
 from typing import Any, Dict
 from paho.mqtt.enums import CallbackAPIVersion
@@ -8,18 +9,15 @@ import paho.mqtt.client as mqtt
 from influxdb_client import InfluxDBClient, Point
 
 # MQTT Configuration
-MQTT_BROKER = "localhost"
-MQTT_PORT = 1883
+MQTT_BROKER = os.getenv("MQTT_BROKER", "mosquitto")
+MQTT_PORT = int(os.getenv("MQTT_PORT", "1883"))
 MQTT_TOPIC = "greenhouse/readings"
 
 # InfluxDB Configuration
-INFLUXDB_URL = "http://localhost:8086"
-INFLUXDB_TOKEN = (
-    "WXLfMiThi8oJcu0dx3Z6uQDE-D02O6C8Ssvqpc5zLY"
-    "BfoDlkAPpXrQvr1WVrDt4O4sQHhDAMYzrxsFNz2jYMlw=="
-)
-INFLUXDB_ORG = "greenhouse"
-INFLUXDB_BUCKET = "sensor_data"
+INFLUXDB_URL = os.getenv("INFLUXDB_URL", "http://localhost:8086")
+INFLUXDB_TOKEN = os.getenv("INFLUXDB_TOKEN", "")
+INFLUXDB_ORG = os.getenv("INFLUXDB_ORG", "greenhouse")
+INFLUXDB_BUCKET = os.getenv("INFLUXDB_BUCKET", "sensor_data")
 
 # Initialize InfluxDB client and write API
 influx_client = InfluxDBClient(
@@ -33,23 +31,20 @@ write_api = influx_client.write_api()
 def write_to_influx(data: Dict[str, Any]) -> None:
     """
     Write a dictionary of sensor data to InfluxDB.
-
-    Args:
-        data: Dictionary containing sensor readings. Must include
-              keys: "temperature", "humidity", "soil_moisture",
-              "light_on", and "timestamp".
-
-    Raises:
-        ValueError: If any field is missing or has an invalid format.
     """
     try:
         point = (
-            Point("sensor_readings")
-            .tag("location", "greenhouse")
-            .field("temperature", float(data["temperature"]))
-            .field("humidity", float(data["humidity"]))
+            Point("greenhouse_env")
+            .tag("sensor_id", data.get("sensor_id", "default_sensor"))
+            .tag("zone", data.get("zone", "default_zone"))
+            .tag("plant", data.get("plant", "default_plant"))
+            .field("air_temp_c", float(data["air_temp_c"]))
+            .field("rel_humidity", float(data["rel_humidity"]))
             .field("soil_moisture", float(data["soil_moisture"]))
-            .field("light_on", int(data["light_on"]))
+            .field("water_tank_level", float(data.get("water_tank_level", 0.0)))
+            .field("light_on", int(data.get("light_on", 0)))
+            .field("fan_on", int(data.get("fan_on", 0)))
+            .field("pump_on", int(data.get("pump_on", 0)))
             .time(datetime.fromisoformat(data["timestamp"]))
         )
         write_api.write(bucket=INFLUXDB_BUCKET, org=INFLUXDB_ORG, record=point)
@@ -71,7 +66,7 @@ def on_message(_client: mqtt.Client, _userdata: Any, msg: mqtt.MQTTMessage) -> N
         payload = msg.payload.decode("utf-8")
         data = json.loads(payload)
 
-        required_keys = {"temperature", "humidity", "soil_moisture", "light_on", "timestamp"}
+        required_keys = {"air_temp_c", "rel_humidity", "soil_moisture", "light_on", "timestamp"}
         if not required_keys.issubset(data.keys()):
             print("! Invalid data format: missing required keys.")
 
