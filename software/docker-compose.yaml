@@ -9,6 +9,11 @@ services:
       - ./mosquitto/config:/mosquitto/config
       - ./mosquitto/data:/mosquitto/data
       - ./mosquitto/log:/mosquitto/log
+    healthcheck:
+      test: ["CMD", "nc", "-zv", "localhost", "1883"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     restart: unless-stopped
 
   # --- InfluxDB 2.x ---
@@ -25,6 +30,11 @@ services:
       - DOCKER_INFLUXDB_INIT_PASSWORD=admin1234
       - DOCKER_INFLUXDB_INIT_ORG=greenhouse
       - DOCKER_INFLUXDB_INIT_BUCKET=sensor_data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
 
   # --- Grafana ---
@@ -35,6 +45,7 @@ services:
       - "3000:3000"
     volumes:
       - ./grafana:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
@@ -58,8 +69,10 @@ services:
     build: ./data_processor
     container_name: data_processor
     depends_on:
-      - influxdb
-      - mosquitto
+      influxdb:
+        condition: service_healthy
+      mosquitto: 
+        condition: service_healthy
     environment:
       - MQTT_BROKER=${MQTT_BROKER}
       - MQTT_PORT=${MQTT_PORT}

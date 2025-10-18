@@ -1,0 +1,29 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "panels": [
+    {
+      "title": "Air Temperature (°C)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "query": "from(bucket:\"sensor_data\") |> range(start:-15m) |> filter(fn:(r) => r._measurement == \"greenhouse_env\" and r._field == \"air_temp_c\")"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 }
+    },
+    {
+      "title": "Soil Moisture",
+      "type": "timeseries",
+      "targets": [
+        {
+          "query": "from(bucket:\"sensor_data\") |> range(start:-15m) |> filter(fn:(r) => r._measurement == \"greenhouse_env\" and r._field == \"soil_moisture\")"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 }
+    }
+  ],
+  "title": "Smart Greenhouse Dashboard",
+  "uid": "greenhouse-dashboard",
+  "version": 1
+}
